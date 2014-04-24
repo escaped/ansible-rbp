@@ -7,7 +7,6 @@
   roles:
     - common
     - rbpconfig
-    - packer
 
 - hosts: xbmc
   sudo: yes
