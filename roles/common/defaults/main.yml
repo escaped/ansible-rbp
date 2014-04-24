@@ -1,0 +1,6 @@
+---
+hostname: alarmpi
+#sudo_user: hans
+#ssh_users:
+#  - name: hans
+#    key: "ssh-rsa ...."

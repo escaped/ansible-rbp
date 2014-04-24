@@ -20,8 +20,8 @@
     - mosh
 
 - name: configure sudo
-  lineinfile: dest=/etc/sudoers regexp="{{item.name}} ALL" line="{{item.name}} ALL=(ALL) NOPASSWD:ALL" state=present validate='visudo -cf %s'
-  with_items: sudo_users
+  lineinfile: dest=/etc/sudoers regexp="{{sudo_user}} ALL" line="{{sudo_user}} ALL=(ALL) NOPASSWD:ALL" state=present validate='visudo -cf %s'
+  when: sudo_user is defined
 
 - name: Configure ntp
   copy: src=ntp.conf dest=/etc/ntp.conf
@@ -33,10 +33,12 @@
 - name: Disallow root SSH access
   lineinfile: dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
   notify: restart ssh
+  when: ssh_users is defined
 
 - name: Disallow password authentication
   lineinfile: dest=/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
   notify: restart ssh
+  when: ssh_users is defined
 
 - name: set hostname
   template: src=hostname.j2 dest=/etc/hostname
