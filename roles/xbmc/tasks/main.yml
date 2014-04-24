@@ -3,7 +3,7 @@
   pacman: name=xbmc-rbp-git update_cache=yes state=installed
 
 - name: change xbmc home
-  user: name=xbmc home=/home/xbmc state=present
+  user: name=xbmc home={{xbmc_home}} state=present
 
 - name: enable xbmc service
   service: name=xbmc enabled=yes state=started

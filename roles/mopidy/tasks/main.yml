@@ -11,13 +11,16 @@
     - mopidy-spotify
 
 - name: change home
-  user: name=mopidy home=/home/mopidy state=present
+  user: name=mopidy home={{mopidy_home}} state=present
 
-- name: ensure config folder
-  file: path=/home/mopidy/.config/mopidy state=directory owner=mopidy group=mopidy
+- name: ensure config folder (.config)
+  file: path={{mopidy_home}}/.config state=directory owner=mopidy group=mopidy
+
+- name: ensure config folder (.config/mopidy)
+  file: path={{mopidy_home}}/.config/mopidy state=directory owner=mopidy group=mopidy
 
 - name: update default config
-  template: src=config.j2 dest=/home/mopidy/.config/mopidy/mopidy.conf owner=mopidy group=mopidy
+  template: src=config.j2 dest={{mopidy_home}}/.config/mopidy/mopidy.conf owner=mopidy group=mopidy
   notify: restart mopidy
 
 - name: enable xbmc service
