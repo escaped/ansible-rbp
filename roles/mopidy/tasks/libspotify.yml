@@ -1,0 +1,33 @@
+---
+
+- name: libspotify | check wether installed
+  command: pacman -Q libspotify
+  register: installed
+  ignore_errors: True
+
+- name: libspotify | install build requirements
+  pacman: name={{item}} state=installed
+  with_items:
+    - make
+    - binutils
+  when: installed|failed
+
+- name: libspotify | create temp folder
+  file: path=/tmp/libspotify state=directory
+  when: installed|failed
+
+- name: libspotify | upload PKGBUILD
+  copy: src=PKGBUILD dest=/tmp/libspotify/
+  when: installed|failed
+
+- name: libspotify | build
+  command: chdir=/tmp/libspotify/ makepkg -f --asroot
+  when: installed|failed
+
+- name: libspotify | install
+  shell: pacman -U --noconfirm /tmp/libspotify/libspotify-*.pkg.tar.xz
+  when: installed|failed
+
+- name: libspotify | cleanup
+  file: path=/tmp/libspotify state=absent
+  when: installed|failed

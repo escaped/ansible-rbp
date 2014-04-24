@@ -1,0 +1,59 @@
+# Maintainer: Alexandre Petitjean <alpetitjean@ŋmail.com>
+pkgname=libspotify
+
+pkgver=12.1.51
+pkgrel=1
+pkgdesc="C API package allowing third-party developers to write applications that utilize the Spotify music streaming service"
+
+arch=(armv5t armv6t armv6h armv7)
+url="https://developer.spotify.com/technologies/libspotify/"
+license=('custom')
+depends=('glibc')
+makedepends=('make')
+
+_dlarch=
+if test "$CARCH" == armv5t; then
+  _dlarch=armv5
+  md5sums=('a7fbd6e248dc4d350f044f0729f1dc40')
+elif test "$CARCH" == armv6t; then
+  _dlarch=armv6
+  md5sums=('11c92c757ff316a46e64d518d6d45b05')
+elif test "$CARCH" == armv6h; then
+  _dlarch=armv6-bcm2708hardfp
+  pkgver=12.1.103
+  md5sums=('bf9afc8c7b966841735734b248f9c7a7')
+elif test "$CARCH" == armv7; then
+  _dlarch=armv7
+  ms5sums=('eb7e98849b3bb6d364fa74034602afbf')
+fi
+
+source=(http://developer.spotify.com/download/libspotify/libspotify-${pkgver}-Linux-${_dlarch}-release.tar.gz)
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver-Linux-${_dlarch}-release"
+
+  # Don't do stupid things from a Makefile
+  msg2 "Patching Makefile..."
+  sed -i 's/ldconfig//' Makefile
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver-Linux-${_dlarch}-release"
+
+  make prefix="$pkgdir/usr" install
+
+  # Install documentation
+  cp -R share "$pkgdir"/usr/share
+  mkdir -p "$pkgdir"/usr/share/man
+  mv "$pkgdir"/usr/share/man3 "$pkgdir"/usr/share/man/man3
+
+  # Correct pkgconfig file
+  sed -e s:PKG_PREFIX:/usr:g \
+          < lib/pkgconfig/libspotify.pc \
+          > "$pkgdir"/usr/lib/pkgconfig/libspotify.pc
+
+  # Custom license
+  install -Dm644 LICENSE licenses.xhtml "$pkgdir"/usr/share/doc/libspotify
+  mkdir -p "$pkgdir"/usr/share/licenses/libspotify
+  ln -s ../../doc/libspotify/LICENSE "$pkgdir"/usr/share/licenses/libspotify/LICENSE
+}

@@ -14,3 +14,9 @@
 
   roles:
     - xbmc
+
+- hosts: mopidy
+  sudo: yes
+
+  roles:
+    - mopidy

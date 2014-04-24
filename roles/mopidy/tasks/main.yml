@@ -1,0 +1,24 @@
+---
+- include: libspotify.yml
+
+- name: update repo cache
+  command: pacman -Sy
+
+- name: install mopidy
+  command: packer -S --noedit --noconfirm {{ item }}
+  with_items:
+    - mopidy
+    - mopidy-spotify
+
+- name: change home
+  user: name=mopidy home=/home/mopidy state=present
+
+- name: ensure config folder
+  file: path=/home/mopidy/.config/mopidy state=directory owner=mopidy group=mopidy
+
+- name: update default config
+  template: src=config.j2 dest=/home/mopidy/.config/mopidy/mopidy.conf owner=mopidy group=mopidy
+  notify: restart mopidy
+
+- name: enable xbmc service
+  service: name=mopidy enabled=yes state=started
