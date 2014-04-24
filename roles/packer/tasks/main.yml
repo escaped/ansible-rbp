@@ -1,32 +1,33 @@
 ---
 
 - name: check wether installed
-  stat: path=/usr/bin/packer
-  register: check_path
+  command: pacman -Q packer
+  register: installed
+  ignore_errors: True
 
 - name: install build requirements
   pacman: name={{item}} state=installed
   with_items:
     - git
     - binutils
-  when: check_path.stat.exists == false
+  when: installed|failed
 
 - name: create temp folder
   file: path=/tmp/packer state=directory
-  when: check_path.stat.exists == false
+  when: installed|failed
 
 - name: download PKGBUILD
   get_url: url=https://aur.archlinux.org/packages/pa/packer/PKGBUILD dest=/tmp/packer/
-  when: check_path.stat.exists == false
+  when: installed|failed
 
 - name: build
   command: chdir=/tmp/packer/ makepkg -f --asroot
-  when: check_path.stat.exists == false
+  when: installed|failed
 
 - name: install
   shell: pacman -U --noconfirm /tmp/packer/packer-*.pkg.tar.xz
-  when: check_path.stat.exists == false
+  when: installed|failed
 
 - name: cleanup
   file: path=/tmp/packer state=absent
-  when: check_path.stat.exists == false
+  when: installed|failed
