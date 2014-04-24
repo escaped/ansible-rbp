@@ -1,0 +1,19 @@
+---
+
+- name: force hdmi plugged in
+  lineinfile: dest=/boot/config.txt regexp="hdmi_force_hotplug=" line="hdmi_force_hotplug=1" state=present
+
+- name: force hdmi mode
+  lineinfile: dest=/boot/config.txt regexp="hdmi_drive=" line="hdmi_drive=2" state=present
+
+- name: overclock arm
+  lineinfile: dest=/boot/config.txt line="arm_freq=950"
+
+- name: overclock core
+  lineinfile: dest=/boot/config.txt line="core_freq=450"
+
+- name: overclock sdram
+  lineinfile: dest=/boot/config.txt line="sdram_freq=450"
+
+- name: overclock voltage
+  lineinfile: dest=/boot/config.txt line="over_voltage=6"

@@ -1,11 +1,12 @@
 ---
 # file: site.yml
 
-#- hosts: all
-#  sudo: yes
-#
-#  roles:
-#    - common
+- hosts: all
+  sudo: yes
+
+  roles:
+    - common
+    - rbpconfig
 
 - hosts: xbmc
   sudo: yes
