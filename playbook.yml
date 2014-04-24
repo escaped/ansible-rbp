@@ -1,0 +1,8 @@
+---
+# file: site.yml
+
+- hosts: all
+  sudo: yes
+
+  roles:
+    - common

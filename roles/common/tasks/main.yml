@@ -1,0 +1,39 @@
+---
+#- name: update package list
+#  pacman: update_cache=yes
+
+- name: Add ssh users
+  user: name={{item.name}} groups=users shell=/usr/bin/bash
+  with_items: ssh_users
+
+- name: add public keys to authorized_keys files
+  authorized_key: user={{item.name}} key="{{item.key}}"
+  with_items: ssh_users
+
+- name: Install necessities and nice-to-haves
+  pacman: name={{item}} state=installed
+  with_items:
+    - vim
+    - htop
+    - sudo
+    - ntp
+    - mosh
+
+- name: configure sudo
+  lineinfile: dest=/etc/sudoers regexp="{{item.name}} ALL" line="{{item.name}} ALL=(ALL) NOPASSWD:ALL" state=present validate='visudo -cf %s'
+  with_items: sudo_users
+
+- name: Configure ntp
+  copy: src=ntp.conf dest=/etc/ntp.conf
+  notify: restart ntp
+
+- name: Ensure ntpd is running and enabled
+  service: name=ntpd state=running enabled=yes
+
+- name: Disallow root SSH access
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
+  notify: restart ssh
+
+- name: Disallow password authentication
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
+  notify: restart ssh
