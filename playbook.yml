@@ -1,8 +1,14 @@
 ---
 # file: site.yml
 
-- hosts: all
+#- hosts: all
+#  sudo: yes
+#
+#  roles:
+#    - common
+
+- hosts: xbmc
   sudo: yes
 
   roles:
-    - common
+    - xbmc
