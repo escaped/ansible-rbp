@@ -1,6 +1,6 @@
 # file hosts
 [raspberry-pi]
-192.168.0.22 ansible_python_interpreter=/usr/bin/python2 ansible_ssh_user=alex
+192.168.0.22 ansible_python_interpreter=/usr/bin/python2
 
 [xbmc:children]
 raspberry-pi
