@@ -7,6 +7,8 @@
 - name: packer | install build requirements
   pacman: name={{item}} state=installed
   with_items:
+    - jshon
+    - expac
     - git
     - binutils
   when: check_path.stat.exists == false
