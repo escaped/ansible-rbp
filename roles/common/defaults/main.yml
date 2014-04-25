@@ -4,3 +4,4 @@ hostname: alarmpi
 #ssh_users:
 #  - name: hans
 #    key: "ssh-rsa ...."
+#ext_harddisk_label

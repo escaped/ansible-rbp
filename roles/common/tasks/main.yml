@@ -44,3 +44,15 @@
   template: src=hostname.j2 dest=/etc/hostname
 
 - include: packer.yml
+
+- name: create mount point
+  file: dest=/mnt/{{ext_harddisk_label}} state=directory
+  when: ext_harddisk_label is defined
+
+- name: add external HDD to fstab
+  lineinfile: dest=/etc/fstab line="LABEL={{ext_harddisk_label}} /mnt/{{ext_harddisk_label}} ext4 defaults 0 0" state=present
+  when: ext_harddisk_label is defined
+
+- name: mount HDDs
+  command: mount -a
+  when: ext_harddisk_label is defined
