@@ -25,4 +25,12 @@ Since the required packages for ansible are now in place, you can run the main p
 
         ansible-playbook -k playbook.yml -i hosts -u <sudo_user>
 
-After running this playbook you may need to restart your Raspberry Pi (eg. hostname changes).
+After running this playbook you may need to restart your Raspberry Pi (eg. hostname changes). Ansible will report a failure - ignore this:
+
+        ansible raspberry-pi -i hosts -a "sudo reboot" -u <sudo_user>
+
+
+## Notes
+
++ The complete installation takes up to 45 minutes depending on your sdcard.
++ To speed up things you should point `xbmc_home` and `mopidy_home` to an external harddisk or usb stick.
