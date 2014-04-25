@@ -11,7 +11,7 @@
   with_items: ssh_users
 
 - name: Install necessities and nice-to-haves
-  pacman: name={{item}} state=installed
+  pacman: name={{item}} state=installed update_cache=yes
   with_items:
     - vim
     - htop
