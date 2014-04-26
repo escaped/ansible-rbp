@@ -7,8 +7,12 @@
 - name: install mopidy
   command: packer -S --noedit --noconfirm {{ item }}
   with_items:
+    - gcc
     - mopidy
     - mopidy-spotify
+
+- name: create home
+  file: path={{mopidy_home}} state=directory owner=mopidy group=mopidy
 
 - name: change home
   user: name=mopidy home={{mopidy_home}} state=present
