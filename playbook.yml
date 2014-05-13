@@ -19,3 +19,9 @@
 
   roles:
     - mopidy
+
+- hosts: syncthing
+  sudo: yes
+
+  roles:
+    - syncthing
