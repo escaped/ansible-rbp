@@ -13,6 +13,11 @@
 
 - name: create home
   file: path={{mopidy_home}} state=directory owner=mopidy group=mopidy
+  register: home
+
+- name: stop mopidy
+  service: name=mopidy state=stopped
+  when: home|changed
 
 - name: change home
   user: name=mopidy home={{mopidy_home}} state=present
@@ -27,5 +32,5 @@
   template: src=config.j2 dest={{mopidy_home}}/.config/mopidy/mopidy.conf owner=mopidy group=mopidy
   notify: restart mopidy
 
-- name: enable xbmc service
+- name: enable mopidy service
   service: name=mopidy enabled=yes state=started

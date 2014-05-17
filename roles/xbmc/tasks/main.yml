@@ -2,8 +2,17 @@
 - name: install latest xbmc
   pacman: name=xbmc-rbp-git update_cache=yes state=installed
 
+- name: create home
+  file: path={{mopidy_home}} state=directory owner=xbmc group=xbmc
+  register: home
+
+- name: stop xbmc
+  service: name=xbmc state=stopped
+  when: home|changed
+
 - name: change xbmc home
   user: name=xbmc home={{xbmc_home}} state=present
+  notify: restart xbmc
 
 - name: enable xbmc service
   service: name=xbmc enabled=yes state=started

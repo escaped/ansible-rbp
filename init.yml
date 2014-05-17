@@ -3,6 +3,8 @@
   remote_user: root
   gather_facts: False
   tasks:
+    - name: update package database
+      raw: pacman -Sy
     - name: install python 2
       raw: pacman -S --noconfirm --quiet --needed python2
 
