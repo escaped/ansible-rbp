@@ -1,0 +1,22 @@
+---
+- name: create swap file
+  file: path={{swapfile.path}} mode=0600 state=touch
+  when: swapfile is defined
+  register: swapfile_created
+
+- name: fill up swapfile
+  command: fallocate -l {{swapfile.size}} {{swapfile.path}}
+  when: swapfile_created|changed
+
+- name: init swapfile
+  command: mkswap {{swapfile.path}}
+  when: swapfile_created|changed
+
+- name: add swapfile to fstab
+  lineinfile: dest=/etc/fstab regexp="swap" line="{{swapfile.path}} swap swap defaults 0 0" state=present
+  when: swapfile_created|changed
+  register: swapfile_fstab
+
+- name: activate swapfile
+  command: swapon {{swapfile.path}}
+  when: swapfile_fstab|changed

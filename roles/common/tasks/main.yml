@@ -56,3 +56,14 @@
 - name: mount HDDs
   command: mount -a
   when: ext_harddisk_label is defined
+
+- include: swapfile.yml
+
+- name: setup locale
+  lineinfile: dest=/etc/locale.gen regexp="^#{{item}}" line="{{item}}"
+  with_items: locale
+  register: update_locale
+
+- name: generate locales
+  command: locale-gen
+  when: update_locale|changed
