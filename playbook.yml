@@ -1,4 +1,4 @@
----
+
 # file: site.yml
 
 - hosts: all
@@ -19,3 +19,9 @@
 
   roles:
     - mopidy
+
+- hosts: btsync
+  sudo: yes
+
+  roles:
+    - btsync
