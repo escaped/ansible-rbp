@@ -1,0 +1,7 @@
+btsync_webui:
+  device_name: btsync
+  user: admin
+  password: admin
+#btsync_shared_folders:
+#  - path: /path/to/shared/folder
+#    key: PRIVATE

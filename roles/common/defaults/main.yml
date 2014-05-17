@@ -1,7 +1,12 @@
 ---
 hostname: alarmpi
+locale:
+  - "en_US.UTF-8 UTF-8"
+#swapfile:
+#  path: /mnt/Storage/swap
+#  size: 512M
 #sudo_user: hans
 #ssh_users:
 #  - name: hans
 #    key: "ssh-rsa ...."
-#ext_harddisk_label
+#ext_harddisk_label: Storage

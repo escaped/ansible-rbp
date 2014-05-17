@@ -1,6 +1,9 @@
 ---
+- name: uninstall beta xbmc
+  pacman: name=xbmc-rbp-git state=absent
+
 - name: install latest xbmc
-  pacman: name=xbmc-rbp-git update_cache=yes state=installed
+  pacman: name=xbmc-rbp update_cache=yes state=installed
 
 - name: create home
   file: path={{mopidy_home}} state=directory owner=xbmc group=xbmc

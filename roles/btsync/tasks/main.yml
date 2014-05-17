@@ -1,0 +1,25 @@
+---
+- name: check wether installed
+  command: pacman -Q btsync
+  register: installed
+  ignore_errors: True
+
+- name: install btsync
+  command: packer -S --noedit --noconfirm btsync
+  when: installed|failed
+
+- name: set permissions
+  file: path=/var/lib/btsync/ state=directory owner=btsync group=btsync recurse=true
+  notify: restart btsync
+
+- name: activate service
+  service: name=btsync enabled=yes
+
+- name: copy config
+  template: src=config.json dest=/etc/btsync.conf owner=btsync group=btsync mode=700
+  notify: restart btsync
+
+- name: create folders
+  file: path={{ item.path }} recurse=yes state=directory owner={{ btsync_user }} group={{ btsync_user }} mode=700
+  with_items: btsync_shared_folders
+  when: btsync_shared_folders is defined

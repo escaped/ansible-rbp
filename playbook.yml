@@ -25,3 +25,9 @@
 
   roles:
     - syncthing
+
+- hosts: btsync
+  sudo: yes
+
+  roles:
+    - btsync
