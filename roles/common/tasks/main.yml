@@ -3,12 +3,13 @@
 #  pacman: update_cache=yes
 
 - name: Add ssh users
-  user: name={{item.name}} groups=users shell=/usr/bin/bash
-  with_items: ssh_users
+  user: name={{item.name}} groups=users shell=/usr/bin/bash password={{item.password}}
+  with_items: users
 
 - name: add public keys to authorized_keys files
   authorized_key: user={{item.name}} key="{{item.key}}"
-  with_items: ssh_users
+  with_items: users
+  when: item.key is defined
 
 - name: Install necessities and nice-to-haves
   pacman: name={{item}} state=installed update_cache=yes
@@ -33,12 +34,12 @@
 - name: Disallow root SSH access
   lineinfile: dest=/etc/ssh/sshd_config regexp="^PermitRootLogin" line="PermitRootLogin no" state=present
   notify: restart ssh
-  when: ssh_users is defined
+  when: users is defined
 
 - name: Disallow password authentication
   lineinfile: dest=/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
   notify: restart ssh
-  when: ssh_users is defined
+  when: users is defined
 
 - name: set hostname
   template: src=hostname.j2 dest=/etc/hostname

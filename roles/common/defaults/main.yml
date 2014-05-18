@@ -6,7 +6,8 @@ locale:
 #  path: /mnt/Storage/swap
 #  size: 512M
 #sudo_user: hans
-#ssh_users:
+#users:
 #  - name: hans
 #    key: "ssh-rsa ...."
+#    password:  # see http://docs.ansible.com/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
 #ext_harddisk_label: Storage
