@@ -1,7 +1,13 @@
 ---
-- name: create swap file
-  file: path={{swapfile.path}} mode=0600 state=touch
+- name: swapfile exists?
+  file: path={{swapfile.path}} mode=0600 state=file
   when: swapfile is defined
+  ignore_errors: true
+  register: swapfile_exists
+
+- name: create swapfile
+  file: path={{swapfile.path}} mode=0600 state=touch
+  when: swapfile_exists|failed
   register: swapfile_created
 
 - name: fill up swapfile
