@@ -1,3 +1,0 @@
----
-- name: restart xbmc
-  service: name=xbmc state=restarted

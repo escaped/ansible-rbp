@@ -1,14 +1,22 @@
+[logging]
+debug_file = /var/log/mopidy/mopidy-debug.log
+
 [mpd]
+enabled = true
 hostname = 0.0.0.0
 
 [local]
 enabled = false
 
 [http]
-enabled = false
+enabled = true
+hostname = 0.0.0.0
 
 [spotify]
 enabled = {{mopidy_spotify}}
 bitrate = 320
 username = {{spotify_username}}
 password = {{spotify_password}}
+
+[mopify]
+enabled = true

@@ -1,35 +1,25 @@
 ---
-- include: libspotify.yml
-
 - name: update repo cache
   command: pacman -Sy
 
-- name: install mopidy
-  command: packer -S --noedit --noconfirm {{ item }}
+- name: install build dependencies
+  pacman: name={{item}} state=present
   with_items:
     - gcc
+    - make
+    - binutils
+
+- name: install mopidy
+  command: apacman -S --needed --noedit --noconfirm {{ item }}
+  with_items:
+    - libspotify
     - mopidy
     - mopidy-spotify
-
-- name: create home
-  file: path={{mopidy_home}} state=directory owner=mopidy group=mopidy
-  register: home
-
-- name: stop mopidy
-  service: name=mopidy state=stopped
-  when: home|changed
-
-- name: change home
-  user: name=mopidy home={{mopidy_home}} state=present
-
-- name: ensure config folder (.config)
-  file: path={{mopidy_home}}/.config state=directory owner=mopidy group=mopidy
-
-- name: ensure config folder (.config/mopidy)
-  file: path={{mopidy_home}}/.config/mopidy state=directory owner=mopidy group=mopidy
+    - mopidy-moped  # webinterface
+    - mopidy-mopify  # webinterface
 
 - name: update default config
-  template: src=config.j2 dest={{mopidy_home}}/.config/mopidy/mopidy.conf owner=mopidy group=mopidy
+  template: src=config.j2 dest=/etc/mopidy/mopidy.conf owner=mopidy group=mopidy
   notify: restart mopidy
 
 - name: enable mopidy service

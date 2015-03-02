@@ -1,0 +1,19 @@
+---
+- name: install latest version
+  pacman: name=kodi update_cache=yes state=installed
+
+- name: create home
+  file: path={{kodi_home}} state=directory owner=kodi group=kodi
+  register: home
+
+- name: stop kodi
+  service: name=kodi state=stopped
+  when: home|changed
+
+- name: change home
+  user: name=kodi home={{kodi_home}} state=present
+  when: home|changed
+  notify: restart kodi
+
+- name: enable service
+  service: name=kodi enabled=yes state=started

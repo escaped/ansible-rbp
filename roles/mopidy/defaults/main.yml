@@ -1,5 +1,4 @@
 ---
-mopidy_home: /home/mopidy
 mopidy_spotify: false
 spotify_username:
 spotify_password:

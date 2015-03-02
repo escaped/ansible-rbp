@@ -17,3 +17,12 @@
 
 - name: overclock voltage
   lineinfile: dest=/boot/config.txt line="over_voltage=6"
+
+- name: cma is not supported (remove cma_lwm)
+  lineinfile: dest=/boot/config.txt regexp="^cma_lwm" state=absent
+
+- name: cma is not supported (remove cma_hwm)
+  lineinfile: dest=/boot/config.txt regexp="^cma_hwm" state=absent
+
+- name: cma is not supported (remove cma_offline_start)
+  lineinfile: dest=/boot/config.txt regexp="^cma_offline_start" state=absent

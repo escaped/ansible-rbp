@@ -1,0 +1,48 @@
+---
+
+- name: apacman | check wether installed
+  stat: path=/usr/bin/apacman
+  register: check_path
+
+- name: apacman | install build requirements
+  pacman: name={{item}} state=installed
+  with_items:
+    - wget
+    - jshon
+    - expac
+    - git
+    - binutils
+    - fakeroot
+  when: check_path.stat.exists == false
+
+- name: apacman | create temp folder
+  sudo: yes
+  sudo_user: nobody
+  file: path=/tmp/apacman state=directory
+  when: check_path.stat.exists == false
+
+- name: apacman | download build package
+  sudo: yes
+  sudo_user: nobody
+  get_url: url=https://aur.archlinux.org/packages/ap/apacman/apacman.tar.gz dest=/tmp/apacman/
+  when: check_path.stat.exists == false
+
+- name: apacman | extract build package
+  sudo: yes
+  sudo_user: nobody
+  command: tar xfv /tmp/apacman/apacman.tar.gz -C /tmp/apacman/
+  when: check_path.stat.exists == false
+
+- name: apacman | build
+  sudo: yes
+  sudo_user: nobody
+  command: chdir=/tmp/apacman/apacman makepkg -f
+  when: check_path.stat.exists == false
+
+- name: apacman | install
+  shell: pacman -U --noconfirm /tmp/apacman/apacman/apacman-*.pkg.tar.xz
+  when: check_path.stat.exists == false
+
+- name: apacman | cleanup
+  file: path=/tmp/apacman state=absent
+  when: check_path.stat.exists == false

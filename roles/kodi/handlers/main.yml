@@ -1,0 +1,3 @@
+---
+- name: restart kodi
+  service: name=kodi state=restarted

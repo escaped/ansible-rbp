@@ -1,6 +1,6 @@
 ---
-#- name: update package list
-#  pacman: update_cache=yes
+- name: update package list
+  pacman: update_cache=yes
 
 - name: Add ssh users
   user: name={{item.name}} groups=users shell=/usr/bin/bash password={{item.password}}
@@ -44,7 +44,8 @@
 - name: set hostname
   template: src=hostname.j2 dest=/etc/hostname
 
-- include: packer.yml
+- include: apacman.yml
+  tags: apacman
 
 - name: create mount point
   file: dest=/mnt/{{ext_harddisk_label}} state=directory
